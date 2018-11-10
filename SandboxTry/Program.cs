@@ -29,7 +29,7 @@ namespace ThreadSafeCollection
 
     class Log
     {
-        BlockingCollection<string> BC = new BlockingCollection<string>();
+        ConcurrentQueue<string> CQ = new ConcurrentQueue<string>();
         private CancellationTokenSource cts;
         public Log(CancellationTokenSource cts)
         {
@@ -41,25 +41,15 @@ namespace ThreadSafeCollection
             for (int i = 0; i < 100; i++)
             {
                 var msg = i.ToString();
-                if (BC.TryAdd(msg))
-                {
-                    Console.WriteLine("add suc " + msg);
-                }
-                else
-                {
-                    Console.WriteLine("add fail " + msg);
-                }
+                CQ.Enqueue(msg);
             }
-            
-
-
         }
 
         public void get()
         {
             while (true)
             {
-                if (BC.TryTake(out string msg))
+                if (CQ.TryDequeue(out string msg))
                 {
                     Console.WriteLine("take suc " + msg);
                 }
