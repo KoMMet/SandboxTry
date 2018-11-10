@@ -11,9 +11,9 @@ namespace ThreadSafeCollection
         {
             CancellationTokenSource cts = new CancellationTokenSource();
             Log log = new Log(cts);
-            var t1 = Task.Run(() => { log.write();});
-            var t4 = Task.Run(() => { log.write();});
-            var t2 = Task.Run(() => { log.get();});
+            var t1 = Task.Run(() => { log.write(); });
+            var t4 = Task.Run(() => { log.write(); });
+            var t2 = Task.Run(() => { log.get(); });
             var t3 = Task.Run(() =>
             {
                 if (Console.ReadKey().KeyChar == 'q')
@@ -21,7 +21,7 @@ namespace ThreadSafeCollection
                     cts.Cancel();
                 }
             });
-            Task.WaitAll(t1, t2, t3,t4);
+            Task.WaitAll(t1, t2, t3, t4);
             cts.Dispose();
             Console.ReadKey();
         }
@@ -31,6 +31,7 @@ namespace ThreadSafeCollection
     {
         BlockingCollection<string> BC = new BlockingCollection<string>();
         private CancellationTokenSource cts;
+
         public Log(CancellationTokenSource cts)
         {
             this.cts = cts;
@@ -50,9 +51,6 @@ namespace ThreadSafeCollection
                     Console.WriteLine("add fail " + msg);
                 }
             }
-            
-
-
         }
 
         public void get()
@@ -73,7 +71,6 @@ namespace ThreadSafeCollection
                     break;
                 }
             }
-            
         }
     }
 }
