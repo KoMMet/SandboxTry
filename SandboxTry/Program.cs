@@ -22,26 +22,31 @@ namespace ThreadSafeCollection
                 }
             });
             Task.WaitAll(t1, t2, t3, t4);
+            log.Dispose();
             cts.Dispose();
             Console.ReadKey();
         }
     }
 
-    class Log
+    class Log:IDisposable
+
     {
-        BlockingCollection<string> BC = new BlockingCollection<string>();
-        private CancellationTokenSource cts;
+    BlockingCollection<string> BC = new BlockingCollection<string>();
+    private CancellationTokenSource cts;
 
-        public Log(CancellationTokenSource cts)
-        {
-            this.cts = cts;
-        }
+    public Log(CancellationTokenSource cts)
+    {
+        this.cts = cts;
+    }
 
-        public void write()
+    public void write()
+    {
+        for (int i = 0; i < 10000; i++)
         {
-            for (int i = 0; i < 100; i++)
+            //Console.ReadKey(); //debug
+            var msg = i.ToString();
+            if (!BC.IsAddingCompleted)
             {
-                var msg = i.ToString();
                 if (BC.TryAdd(msg))
                 {
                     Console.WriteLine("add suc " + msg);
@@ -51,11 +56,21 @@ namespace ThreadSafeCollection
                     Console.WriteLine("add fail " + msg);
                 }
             }
+
+            if (cts.IsCancellationRequested)
+            {
+                BC.CompleteAdding();
+            }
         }
 
-        public void get()
+    }
+
+    public void get()
+    {
+        while (true)
         {
-            while (true)
+            //BC.GetConsumingEnumerable(cts.Token);
+            if (!BC.IsCompleted)
             {
                 if (BC.TryTake(out string msg))
                 {
@@ -65,12 +80,18 @@ namespace ThreadSafeCollection
                 {
                     Console.WriteLine("take fail " + msg);
                 }
-
-                if (cts.IsCancellationRequested)
-                {
-                    break;
-                }
             }
+
+            if (cts.IsCancellationRequested)
+            {
+                break;
+            }
+        }
+    }
+
+        public void Dispose()
+        {
+            BC?.Dispose();
         }
     }
 }
