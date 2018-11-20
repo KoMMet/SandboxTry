@@ -13,6 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Local", "Local\Local.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "blockingcollection", "blockingcollection\blockingcollection.csproj", "{EAB26C96-0268-4B50-B808-2B36BCD2AA87}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B3111127-7CB2-447D-A06A-379614AC9E6C}"
+	ProjectSection(SolutionItems) = preProject
+		buildEventAfter.txt = buildEventAfter.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

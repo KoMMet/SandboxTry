@@ -1,0 +1,9 @@
+ビルドが成功するとOneDriveにコピーする設定
+
+1. プロジェクト右クリック
+2. プロパティ
+3. ビルドイベントに以下を記述する
+
+xcopy "$(SolutionDir)$(ProjectName)" D:\21.OneDrive\OneDrive\work\try\SandboxTry\$(ProjectName) /s/e/i/d/y/h/c/q
+rd /q/s  D:\21.OneDrive\OneDrive\work\try\SandboxTry\$(ProjectName)\obj
+rd /q/s  D:\21.OneDrive\OneDrive\work\try\SandboxTry\$(ProjectName)\bin
