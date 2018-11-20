@@ -14,9 +14,9 @@ namespace channel
             CancellationTokenSource cts = new CancellationTokenSource();
 
             var test = new Test(collection);
-            var t1 = Task.Run(() => test.Consumer(cts));
-            var t2 = Task.Run(() => test.Producer(cts));
-            var t3 = Task.Run(() => test.Producer(cts));
+            var t1 = Task.Run( async () => await test.Consumer(cts));
+            var t2 = Task.Run( async () => await test.Producer(cts));
+            var t3 = Task.Run( async () => await test.Producer(cts));
             var t4 = Task.Run(() =>
             {
                 if (Console.ReadKey().KeyChar == 'q')
@@ -31,24 +31,23 @@ namespace channel
 
     class Test
     {
-        private readonly Channel<string> _collection;
+        private readonly Channel<string> collection;
 
         public Test(Channel<string> collection)
         {
-            _collection = collection;
+            this.collection = collection;
         }
 
         public async Task Producer(CancellationTokenSource cts)
         {
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 100; i++)
             {
                 //Console.ReadKey(); //debug
-                await _collection.Writer.WriteAsync(i.ToString(), cts.Token);
+                await collection.Writer.WriteAsync(i.ToString(), cts.Token).ConfigureAwait(false);
                 Console.WriteLine("item write: " + i);
 
                 if (cts.IsCancellationRequested)
                 {
-                    //_collection.Writer.Complete();
                     break;
                 }
             }
@@ -58,13 +57,20 @@ namespace channel
         {
             while (true)
             {
-                while (_collection.Reader.TryRead(out var item))
+                try
                 {
-                    Console.WriteLine("item read: " + item);
+                    while(await collection.Reader.WaitToReadAsync(cts.Token).ConfigureAwait(false))
+                    {
+                        while(collection.Reader.TryRead(out var item))
+                        {
+                            Console.WriteLine("item read: " + item);
+                        }
+                    }
                 }
-
-                if (cts.IsCancellationRequested)
+                catch(Exception e)
                 {
+                    Console.WriteLine($"unexpected exception:{e}");
+                    collection.Writer.TryComplete(e);
                     break;
                 }
             }
