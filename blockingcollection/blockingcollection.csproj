@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(SolutionDir)$(ProjectName)&quot; D:\21.OneDrive\OneDrive\work\try\SandboxTry\$(ProjectName) /s/e/i/d/y/h/c/q&#xD;&#xA;rd /q/s  D:\21.OneDrive\OneDrive\work\try\SandboxTry\$(ProjectName)\obj&#xD;&#xA;rd /q/s  D:\21.OneDrive\OneDrive\work\try\SandboxTry\$(ProjectName)\bin" />
+    <Exec Command="xcopy &quot;$(SolutionDir)$(ProjectName)&quot; D:\21.OneDrive\OneDrive\work\try\sandbox_csh\SandboxTry\$(ProjectName) /s/e/i/d/y/h/c/q&#xD;&#xA;rd /q/s  D:\21.OneDrive\OneDrive\work\try\sandbox_csh\SandboxTry\$(ProjectName)\obj&#xD;&#xA;rd /q/s  D:\21.OneDrive\OneDrive\work\try\sandbox_csh\SandboxTry\$(ProjectName)\bin" />
   </Target>
 
 </Project>
