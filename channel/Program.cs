@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -43,10 +42,10 @@ namespace channel
             for (var i = 0; i < 100; i++)
             {
                 //Console.ReadKey(); //debug
-                await collection.Writer.WriteAsync(i.ToString(), cts.Token).ConfigureAwait(false);
+                await collection.Writer.WriteAsync(i.ToString()).ConfigureAwait(false);
                 Console.WriteLine("item write: " + i);
 
-                if (cts.IsCancellationRequested)
+                if(cts.IsCancellationRequested)
                 {
                     break;
                 }
@@ -70,7 +69,6 @@ namespace channel
                 catch(Exception e)
                 {
                     Console.WriteLine($"unexpected exception:{e}");
-                    collection.Writer.TryComplete(e);
                     break;
                 }
             }
